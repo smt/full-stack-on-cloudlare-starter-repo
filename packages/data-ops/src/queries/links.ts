@@ -48,3 +48,14 @@ export async function getLinks(accountId: string, createdBefore?: string) {
     destinations: Object.keys(JSON.parse(link.destinations as string)).length,
   }));
 }
+
+export async function updateLinkName(linkId: string, name: string) {
+  const db = getDb();
+  await db
+    .update(links)
+    .set({
+      name,
+      updated: new Date().toISOString(),
+    })
+    .where(eq(links.linkId, linkId));
+}
