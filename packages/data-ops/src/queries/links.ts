@@ -2,6 +2,8 @@ import { getDb } from "@/db/database";
 import { links } from "@/drizzle-out/schema";
 import {
   CreateLinkSchemaType,
+  destinationsSchema,
+  DestinationsSchemaType,
   linkSchema,
 } from "@/zod/links";
 import { and, desc, eq, gt } from "drizzle-orm";
@@ -83,4 +85,19 @@ export async function getLink(linkId: string) {
     throw new Error("BAD_REQUEST Error Parsing Link");
   }
   return parsedLink.data;
+}
+
+export async function updateLinkDestinations(
+  linkId: string,
+  destinations: DestinationsSchemaType,
+) {
+  const destinationsParsed = destinationsSchema.parse(destinations);
+  const db = getDb();
+  await db
+    .update(links)
+    .set({
+      destinations: JSON.stringify(destinationsParsed),
+      updated: new Date().toISOString(),
+    })
+    .where(eq(links.linkId, linkId));
 }
