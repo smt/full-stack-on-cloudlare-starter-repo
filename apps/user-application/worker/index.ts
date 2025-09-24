@@ -1,9 +1,11 @@
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
+import { initDatabase } from "@repo/data-ops/database";
 import { appRouter } from "./trpc/router";
 import { createContext } from "./trpc/context";
 
 export default {
   fetch(request, env, ctx) {
+    initDatabase(env.DB);
     const url = new URL(request.url);
 
     if (url.pathname.startsWith("/trpc")) {
