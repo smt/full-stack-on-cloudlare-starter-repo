@@ -6,6 +6,7 @@ import {
 } from "@repo/data-ops/zod-schema/links";
 import {
   createLink,
+  getLink,
   getLinks,
   updateLinkName,
 } from "@repo/data-ops/queries/links";
@@ -48,19 +49,8 @@ export const linksTrpcRoutes = t.router({
         linkId: z.string(),
       }),
     )
-    .query(async ({}) => {
-      const data = {
-        name: "My Sample Link",
-        linkId: "link_123456789",
-        accountId: "user_987654321",
-        destinations: {
-          default: "https://example.com",
-          mobile: "https://mobile.example.com",
-          desktop: "https://desktop.example.com",
-        },
-        created: "2024-01-15T10:30:00Z",
-        updated: "2024-01-20T14:45:00Z",
-      };
+    .query(async ({ input }) => {
+      const data = await getLink(input.linkId);
       if (!data) throw new TRPCError({ code: "NOT_FOUND" });
       return data;
     }),
