@@ -4,14 +4,10 @@ import {
   createLinkSchema,
   destinationsSchema,
 } from "@repo/data-ops/zod-schema/links";
-import { createLink } from "@repo/data-ops/queries/links";
+import { createLink, getLinks } from "@repo/data-ops/queries/links";
 
 import { TRPCError } from "@trpc/server";
-import {
-  ACTIVE_LINKS_LAST_HOUR,
-  LAST_30_DAYS_BY_COUNTRY,
-  LINK_LIST,
-} from "./dummy-data";
+import { ACTIVE_LINKS_LAST_HOUR, LAST_30_DAYS_BY_COUNTRY } from "./dummy-data";
 
 export const linksTrpcRoutes = t.router({
   linkList: t.procedure
@@ -20,8 +16,8 @@ export const linksTrpcRoutes = t.router({
         offset: z.number().optional(),
       }),
     )
-    .query(async ({}) => {
-      return LINK_LIST;
+    .query(async ({ ctx, input }) => {
+      return await getLinks(ctx.userInfo.userId, input.offset?.toString());
     }),
   createLink: t.procedure
     .input(createLinkSchema)
