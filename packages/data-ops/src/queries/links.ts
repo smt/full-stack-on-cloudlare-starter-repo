@@ -1,6 +1,9 @@
 import { getDb } from "@/db/database";
 import { links } from "@/drizzle-out/schema";
-import { CreateLinkSchemaType } from "@/zod/links";
+import {
+  CreateLinkSchemaType,
+  linkSchema,
+} from "@/zod/links";
 import { and, desc, eq, gt } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
@@ -58,4 +61,26 @@ export async function updateLinkName(linkId: string, name: string) {
       updated: new Date().toISOString(),
     })
     .where(eq(links.linkId, linkId));
+}
+
+export async function getLink(linkId: string) {
+  const db = getDb();
+
+  const result = await db
+    .select()
+    .from(links)
+    .where(eq(links.linkId, linkId))
+    .limit(1);
+
+  if (!result.length) {
+    return null;
+  }
+
+  const link = result[0];
+  const parsedLink = linkSchema.safeParse(link);
+  if (!parsedLink.success) {
+    console.log(parsedLink.error);
+    throw new Error("BAD_REQUEST Error Parsing Link");
+  }
+  return parsedLink.data;
 }
