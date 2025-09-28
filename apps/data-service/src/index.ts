@@ -14,7 +14,7 @@ export default class DataService extends WorkerEntrypoint<Env> {
 
   async queue(batch: MessageBatch<unknown>): Promise<void> {
     for (const message of batch.messages) {
-      console.log(`Queue Message ${message.id}: ${message.body}`);
+      console.log(`Queue Message ${message.id}:`, message.body);
     }
   }
 }
