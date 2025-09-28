@@ -1,11 +1,14 @@
 import { t } from "@/worker/trpc/trpc-instance";
 
 import { z } from "zod";
-import { EVALUATION_ISSUES, EVALUATIONS } from "./dummy-data";
+import { EVALUATIONS } from "./dummy-data";
 
+import {
+  getNotAvailableEvaluations,
+} from "@repo/data-ops/queries/evaluations";
 export const evaluationsTrpcRoutes = t.router({
-  problematicDestinations: t.procedure.query(async ({}) => {
-    return EVALUATION_ISSUES;
+  problematicDestinations: t.procedure.query(async ({ ctx }) => {
+    return getNotAvailableEvaluations(ctx.userInfo.userId);
   }),
   recentEvaluations: t.procedure
     .input(
