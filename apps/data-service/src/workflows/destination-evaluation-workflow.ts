@@ -31,5 +31,13 @@ export class DestinationEvaluationWorkflow extends WorkflowEntrypoint<Env, Desti
         destinationUrl: event.payload.destinationUrl,
       });
     });
+
+    await step.do('Backup raw destination output in R2', async () => {
+      const accountId = event.payload.accountId;
+      const r2PathHtml = `evaluations/${accountId}/html/${evaluationId}`;
+      const r2PathBodyText = `evaluations/${accountId}/body-text/${evaluationId}`;
+      await this.env.BUCKET.put(r2PathHtml, collectedData.html);
+      await this.env.BUCKET.put(r2PathBodyText, collectedData.bodyText);
+    });
   }
 }
