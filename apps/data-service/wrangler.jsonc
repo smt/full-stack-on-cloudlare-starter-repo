@@ -25,4 +25,11 @@
       "remote": true,
     },
   ],
+  "queues": {
+    "consumers": [
+      {
+        "queue": "smart-links-data-queue-stage",
+      },
+    ],
+  },
 }
