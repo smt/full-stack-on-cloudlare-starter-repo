@@ -33,24 +33,14 @@ export class LinkClickTracker extends DurableObject<Env> {
   }
 
   async fetch(_: Request) {
-    const query = `
-      SELECT *
-      FROM geo_link_clicks
-      LIMIT 100
-    `;
+    const webSocketPair = new WebSocketPair();
+    const [client, server] = Object.values(webSocketPair);
 
-    const cursor = this.sql.exec(query);
-    const results = cursor.toArray();
+    this.ctx.acceptWebSocket(server);
 
-    return new Response(
-      JSON.stringify({
-        clicks: results,
-      }),
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      },
-    );
+    return new Response(null, {
+      status: 101, // HTTP 101 Switching Protocols, instructing the client to switch to the WebSocket protocol and keep the connection open
+      webSocket: client,
+    });
   }
 }
