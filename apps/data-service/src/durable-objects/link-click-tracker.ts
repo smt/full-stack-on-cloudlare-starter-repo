@@ -19,7 +19,7 @@ export class LinkClickTracker extends DurableObject<Env> {
     });
   }
 
-  async addLinkClick(latitude: number, longitude: number, country: string, time: number) {
+  async addClick(latitude: number, longitude: number, country: string, time: number) {
     this.sql.exec(
       `
       INSERT INTO geo_link_clicks (latitude, longitude, country, time)
@@ -36,7 +36,7 @@ export class LinkClickTracker extends DurableObject<Env> {
     const query = `
       SELECT *
       FROM geo_link_clicks
-      limit 100
+      LIMIT 100
     `;
 
     const cursor = this.sql.exec(query);
