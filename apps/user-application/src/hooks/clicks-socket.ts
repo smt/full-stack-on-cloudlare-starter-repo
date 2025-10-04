@@ -16,8 +16,7 @@ export function useClickSocket() {
     const connect = () => {
       const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
       const socket = new WebSocket(
-        // `${protocol}//${import.meta.env.VITE_BASE_HOST}/click-socket`,
-        `${protocol}//localhost:8787/click-socket`, // local socket connection for testing
+        `${protocol}//${import.meta.env.VITE_BASE_HOST}/click-socket`,
       );
 
       socket.onopen = () => {
