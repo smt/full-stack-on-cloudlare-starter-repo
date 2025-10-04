@@ -1,4 +1,4 @@
-import { getRoutingDestinations, getDestinationForCountry } from '@/helpers/route-ops';
+import { getRoutingDestinations, getDestinationForCountry, captureLinkClickInBackground } from '@/helpers/route-ops';
 import { cloudflareInfoSchema } from '@repo/data-ops/zod-schema/links';
 import { LinkClickMessageType } from '@repo/data-ops/zod-schema/queue';
 
@@ -36,8 +36,9 @@ App.get('/:id', async (c) => {
       timestamp: new Date().toISOString(),
     },
   };
-  // instead of awaiting the queue send, we use waitUntil to ensure it gets sent even if the response is returned
-  c.executionCtx.waitUntil(c.env.QUEUE.send(queueMessage));
+  // instead of awaiting the queue send and click tracking for background processing,
+  // we use waitUntil to ensure it gets sent even if the response is returned
+  c.executionCtx.waitUntil(captureLinkClickInBackground(c.env, queueMessage));
 
   return c.redirect(destination, 302);
 });

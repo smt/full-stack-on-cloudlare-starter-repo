@@ -58,3 +58,11 @@ export async function scheduleEvalWorkflow(env: Env, event: LinkClickMessageType
   const stub = env.EVALUATION_SCHEDULER_OBJECT.get(doId);
   await stub.collectLinkClick(event.data.accountId, event.data.id, event.data.destination, event.data.country || 'UNKNOWN');
 }
+
+export async function captureLinkClickInBackground(env: Env, event: LinkClickMessageType) {
+  env.QUEUE.send(event);
+  const doId = env.LINK_CLICK_TRACKER_OBJECT.idFromName(event.data.accountId); // use link click account ID as the DO name
+  const stub = env.LINK_CLICK_TRACKER_OBJECT.get(doId);
+  if (!event.data.latitude || !event.data.longitude || !event.data.country) return;
+  await stub.addClick(event.data.latitude, event.data.longitude, event.data.country, new Date(event.data.timestamp).valueOf());
+}
