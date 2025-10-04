@@ -6,8 +6,14 @@ import { Hono } from 'hono';
 
 export const App = new Hono<{ Bindings: Env }>();
 
-App.get('/link-click/:accountId', async (c) => {
-  const accountId = c.req.param('accountId');
+App.get('/click-socket', async (c) => {
+  const upgradeHeader = c.req.header('Upgrade');
+  if (upgradeHeader?.toLowerCase() !== 'websocket') {
+    return c.text('Expected Upgrade: websocket', 426); // HTTP 426 Upgrade Required
+  }
+
+  const accountId = c.req.header('account-id');
+  if (!accountId) return c.text('Missing account-id header', 400);
   const doId = c.env.LINK_CLICK_TRACKER_OBJECT.idFromName(accountId); // use account ID as the DO name
   const stub = c.env.LINK_CLICK_TRACKER_OBJECT.get(doId);
 
