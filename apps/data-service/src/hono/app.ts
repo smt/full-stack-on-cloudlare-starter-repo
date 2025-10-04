@@ -12,8 +12,8 @@ App.get('/click-socket', async (c) => {
     return c.text('Expected Upgrade: websocket', 426); // HTTP 426 Upgrade Required
   }
 
-  // const accountId = c.req.header('account-id');
-  const accountId = '1234567890'; // hardcoded for testing
+  const accountId = c.req.header('account-id');
+
   if (!accountId) return c.text('Missing account-id header', 400);
   const doId = c.env.LINK_CLICK_TRACKER_OBJECT.idFromName(accountId); // use account ID as the DO name
   const stub = c.env.LINK_CLICK_TRACKER_OBJECT.get(doId);
