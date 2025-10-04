@@ -1,4 +1,5 @@
 import { DurableObject } from 'cloudflare:workers';
+import { addSeconds, toDate } from 'date-fns';
 
 export class LinkClickTracker extends DurableObject<Env> {
   sql: SqlStorage;
@@ -30,8 +31,13 @@ export class LinkClickTracker extends DurableObject<Env> {
       country,
       time,
     );
+    const alarm = await this.ctx.storage.getAlarm();
+    if (!alarm) await this.ctx.storage.setAlarm(toDate(addSeconds(new Date(), 5)).valueOf());
   }
 
+  async alarm() {
+    console.log('Alarm triggered, flushing click buffer if any');
+  }
   async fetch(_: Request) {
     const webSocketPair = new WebSocketPair();
     const [client, server] = Object.values(webSocketPair);
