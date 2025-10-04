@@ -1,14 +1,25 @@
 import { DurableObject } from 'cloudflare:workers';
 import { addSeconds, toDate } from 'date-fns';
+import { getRecentClicks } from '@/helpers/durable-queries';
 
 export class LinkClickTracker extends DurableObject<Env> {
   sql: SqlStorage;
+  mostRecentOffsetTime: number = 0;
+  leastRecentOffsetTime: number = 0;
 
   constructor(ctx: DurableObjectState, env: any) {
     super(ctx, env);
     this.sql = ctx.storage.sql;
 
     ctx.blockConcurrencyWhile(async () => {
+      const [leastRecentOffestTime, mostRecentOffsetTime] = await Promise.all([
+        ctx.storage.get<number>('leastRecentOffsetTime'),
+        ctx.storage.get<number>('mostRecentOffsetTime'),
+      ]);
+
+      this.leastRecentOffsetTime = leastRecentOffestTime || this.leastRecentOffsetTime;
+      this.mostRecentOffsetTime = mostRecentOffsetTime || this.mostRecentOffsetTime;
+
       this.sql.exec(`
         CREATE TABLE IF NOT EXISTS geo_link_clicks (
           latitude REAL NOT NULL,
@@ -37,6 +48,12 @@ export class LinkClickTracker extends DurableObject<Env> {
 
   async alarm() {
     console.log('Alarm triggered, flushing click buffer if any');
+    const clickData = getRecentClicks(this.sql, this.mostRecentOffsetTime);
+
+    const sockets = this.ctx.getWebSockets();
+    for (const ws of sockets) {
+      ws.send(JSON.stringify(clickData.clicks));
+    }
   }
   async fetch(_: Request) {
     const webSocketPair = new WebSocketPair();
