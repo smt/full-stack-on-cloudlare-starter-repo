@@ -1,6 +1,6 @@
 import { DurableObject } from 'cloudflare:workers';
 import { addSeconds, toDate } from 'date-fns';
-import { getRecentClicks } from '@/helpers/durable-queries';
+import { deleteClicksBefore, getRecentClicks } from '@/helpers/durable-queries';
 
 export class LinkClickTracker extends DurableObject<Env> {
   sql: SqlStorage;
@@ -54,7 +54,20 @@ export class LinkClickTracker extends DurableObject<Env> {
     for (const ws of sockets) {
       ws.send(JSON.stringify(clickData.clicks));
     }
+
+    await this.flushOffsetTimes(clickData.mostRecentTime, clickData.oldestTime);
+    deleteClicksBefore(this.sql, clickData.oldestTime);
   }
+
+  async flushOffsetTimes(mostRecentOffsetTime: number, leastRecentOffsetTime: number) {
+    this.mostRecentOffsetTime = mostRecentOffsetTime;
+    this.leastRecentOffsetTime = leastRecentOffsetTime;
+    await Promise.all([
+      this.ctx.storage.put('mostRecentOffsetTime', this.mostRecentOffsetTime),
+      this.ctx.storage.put('leastRecentOffsetTime', this.leastRecentOffsetTime),
+    ]);
+  }
+
   async fetch(_: Request) {
     const webSocketPair = new WebSocketPair();
     const [client, server] = Object.values(webSocketPair);
