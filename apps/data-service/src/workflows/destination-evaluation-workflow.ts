@@ -25,7 +25,7 @@ export class DestinationEvaluationWorkflow extends WorkflowEntrypoint<Env, Desti
 
         // Convert base64 Data URI to buffer for R2 storage
         const screenshotBase64 = data.screenshotDataUri.replace(/^data:image\/png;base64,/, '');
-        const screenshotBuffer = Buffer.from(screenshotBase64);
+        const screenshotBuffer = Buffer.from(screenshotBase64, 'base64');
 
         await this.env.BUCKET.put(r2PathHtml, data.html);
         await this.env.BUCKET.put(r2PathBodyText, data.bodyText);
