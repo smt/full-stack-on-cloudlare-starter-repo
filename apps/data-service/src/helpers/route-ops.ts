@@ -54,7 +54,7 @@ export function getDestinationForCountry(linkInfo: LinkSchemaType, countryCode?:
 }
 
 export async function scheduleEvalWorkflow(env: Env, event: LinkClickMessageType) {
-  const doId = env.EVALUATION_SCHEDULER.idFromName(`${event.data.id}:${event.data.destination}`); // use a combination of link ID and destination URL as the DO name
-  const stub = env.EVALUATION_SCHEDULER.get(doId);
+  const doId = env.EVALUATION_SCHEDULER_OBJECT.idFromName(`${event.data.id}:${event.data.destination}`); // use a combination of link ID and destination URL as the DO name
+  const stub = env.EVALUATION_SCHEDULER_OBJECT.get(doId);
   await stub.collectLinkClick(event.data.accountId, event.data.id, event.data.destination, event.data.country || 'UNKNOWN');
 }
