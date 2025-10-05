@@ -19,6 +19,12 @@
       "name": "user-application-stage",
       "main": "worker/index.ts",
       "compatibility_date": "2025-06-17",
+      "routes": [
+        {
+          "custom_domain": true,
+          "pattern": "stage.2dr.me",
+        },
+      ],
       "d1_databases": [
         {
           "binding": "DB",
@@ -38,6 +44,12 @@
       "name": "user-application-production",
       "main": "worker/index.ts",
       "compatibility_date": "2025-06-17",
+      "routes": [
+        {
+          "custom_domain": true,
+          "pattern": "2dr.me",
+        },
+      ],
       "d1_databases": [
         {
           "binding": "DB",
