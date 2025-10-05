@@ -24,6 +24,12 @@
   "env": {
     "stage": {
       "name": "data-service-stage",
+      "routes": [
+        {
+          "zone_name": "stage.2dr.me",
+          "pattern": "stage.2dr.me/r/*",
+        },
+      ],
       "d1_databases": [
         {
           "binding": "DB",
@@ -90,6 +96,12 @@
     },
     "production": {
       "name": "data-service-production",
+      "routes": [
+        {
+          "zone_name": "2dr.me",
+          "pattern": "2dr.me/r/*",
+        },
+      ],
       "d1_databases": [
         {
           "binding": "DB",
