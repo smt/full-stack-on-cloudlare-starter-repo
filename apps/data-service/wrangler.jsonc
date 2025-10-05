@@ -11,8 +11,19 @@
   "observability": {
     "enabled": true,
   },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_classes": ["EvaluationScheduler"],
+    },
+    {
+      "tag": "v2",
+      "new_sqlite_classes": ["LinkClickTracker"],
+    },
+  ],
   "env": {
     "stage": {
+      "name": "data-service-stage",
       "d1_databases": [
         {
           "binding": "DB",
@@ -76,18 +87,9 @@
           },
         ],
       },
-      "migrations": [
-        {
-          "tag": "v1",
-          "new_classes": ["EvaluationScheduler"],
-        },
-        {
-          "tag": "v2",
-          "new_sqlite_classes": ["LinkClickTracker"],
-        },
-      ],
     },
     "production": {
+      "name": "data-service-production",
       "d1_databases": [
         {
           "binding": "DB",
@@ -149,16 +151,6 @@
           },
         ],
       },
-      "migrations": [
-        {
-          "tag": "v1",
-          "new_classes": ["EvaluationScheduler"],
-        },
-        {
-          "tag": "v2",
-          "new_sqlite_classes": ["LinkClickTracker"],
-        },
-      ],
     },
   },
 }
