@@ -17,6 +17,8 @@
   "env": {
     "stage": {
       "name": "user-application-stage",
+      "main": "worker/index.ts",
+      "compatibility_date": "2025-06-17",
       "d1_databases": [
         {
           "binding": "DB",
@@ -34,6 +36,8 @@
     },
     "production": {
       "name": "user-application-production",
+      "main": "worker/index.ts",
+      "compatibility_date": "2025-06-17",
       "d1_databases": [
         {
           "binding": "DB",
