@@ -24,9 +24,11 @@
   "env": {
     "stage": {
       "name": "data-service-stage",
+      "main": "src/index.ts",
+      "compatibility_date": "2025-06-17",
       "routes": [
         {
-          "zone_name": "stage.2dr.me",
+          "zone_name": "2dr.me",
           "pattern": "stage.2dr.me/r/*",
         },
       ],
@@ -96,6 +98,8 @@
     },
     "production": {
       "name": "data-service-production",
+      "main": "src/index.ts",
+      "compatibility_date": "2025-06-17",
       "routes": [
         {
           "zone_name": "2dr.me",
