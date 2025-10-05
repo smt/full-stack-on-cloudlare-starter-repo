@@ -5,7 +5,11 @@
   "scripts": {
     "build-package": "pnpm --filter @repo/data-ops run build",
     "dev-frontend": "pnpm --filter user-application run dev",
-    "dev-data-service": "pnpm --filter data-service run dev"
+    "dev-data-service": "pnpm --filter data-service run dev",
+    "ci:deploy-frontend:stage": "pnpm install && pnpm run build-package && pnpm --filter user-application run deploy:stage",
+    "ci:deploy-frontend:production": "pnpm install && pnpm run build-package && pnpm --filter user-application run deploy:production",
+    "ci:deploy-data-service:stage": "pnpm install && pnpm run build-package && pnpm --filter data-service run deploy:stage",
+    "ci:deploy-data-service:production": "pnpm install && pnpm run build-package && pnpm --filter data-service run deploy:production"
   },
   "keywords": [],
   "author": "",
