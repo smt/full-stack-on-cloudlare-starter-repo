@@ -26,7 +26,7 @@
       "name": "data-service-stage",
       "routes": [
         {
-          "zone_name": "stage.2dr.me",
+          "zone_name": "2dr.me",
           "pattern": "stage.2dr.me/r/*",
         },
       ],
