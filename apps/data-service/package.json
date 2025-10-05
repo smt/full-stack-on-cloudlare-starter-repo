@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "deploy:stage": "wrangler deploy --env stage",
+    "deploy:production": "wrangler deploy --env production",
     "dev": "wrangler dev --x-remote-bindings",
     "start": "wrangler dev",
     "test": "vitest",
