@@ -1,11 +1,16 @@
 import { AppSidebar } from "@/components/common/app-sidebar";
 import { SiteHeader } from "@/components/common/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { Outlet, createFileRoute } from "@tanstack/react-router";
+import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/sonner";
+import { authClient } from "@/components/auth/client";
 
 export const Route = createFileRoute("/app/_authed")({
   component: RouteComponent,
+  beforeLoad: async () => {
+    const { data } = await authClient.getSession();
+    if (!data) throw redirect({ to: "/" });
+  },
 });
 function RouteComponent() {
   return (
