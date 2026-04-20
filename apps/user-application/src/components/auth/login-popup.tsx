@@ -7,26 +7,9 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { siGoogle } from "simple-icons";
-
+import { siGithub } from "simple-icons";
 import { useState } from "react";
-
-// Mock authClient with dummy data
-const authClient = {
-  signIn: {
-    social: async ({
-      provider,
-      callbackURL,
-    }: {
-      provider: string;
-      callbackURL: string;
-    }) => {
-      // Simulate async operation
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Fake Action", provider, callbackURL);
-    },
-  },
-};
+import { authClient } from "./client";
 
 interface LoginPopupProps {
   children: React.ReactNode;
@@ -34,10 +17,10 @@ interface LoginPopupProps {
 
 export function LoginPopup({ children }: LoginPopupProps) {
   const [loading, setLoading] = useState(false);
-  const signInWithGoogle = async () => {
+  const signInWithGithub = async () => {
     setLoading(true);
     await authClient.signIn.social({
-      provider: "google",
+      provider: "github",
       callbackURL: "/app",
     });
     setLoading(false);
@@ -49,16 +32,16 @@ export function LoginPopup({ children }: LoginPopupProps) {
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="text-center space-y-4">
           <DialogTitle className="text-2xl font-bold">
-            Continue with Google
+            Continue with Github
           </DialogTitle>
           <p className="text-muted-foreground text-sm">
-            Login or signup by continuing with Google
+            Login or signup by continuing with Github
           </p>
         </DialogHeader>
 
         <div className="mt-6">
           <Button
-            onClick={signInWithGoogle}
+            onClick={signInWithGithub}
             variant="outline"
             className="w-full h-12 text-base font-medium relative overflow-hidden group hover:bg-accent/50 transition-colors"
             disabled={loading}
@@ -75,9 +58,9 @@ export function LoginPopup({ children }: LoginPopupProps) {
                   viewBox="0 0 24 24"
                   fill="currentColor"
                 >
-                  <path d={siGoogle.path} />
+                  <path d={siGithub.path} />
                 </svg>
-                Continue with Google
+                Continue with Github
               </>
             )}
           </Button>
