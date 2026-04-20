@@ -18,7 +18,6 @@ function getAuthInstance(env: Env) {
 }
 
 const authMiddleware = createMiddleware(async (c, next) => {
-  console.log("HIT MIDDLEWARE");
   const auth = getAuthInstance(c.env);
   const session = await auth.api.getSession({ headers: c.req.raw.headers });
   if (!session?.user) {
